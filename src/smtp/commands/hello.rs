@@ -10,7 +10,6 @@ use color_eyre::Report;
 
 #[derive(Debug)]
 pub struct SmtpHello {
-    pub cmd: String,
     pub host: String,
 }
 
@@ -27,7 +26,6 @@ impl Command for SmtpHello {
 
         {
             Ok(Box::new(SmtpHello{
-                cmd: parts[0].to_string(),
                 host: parts[1].to_string(),
             }))
         }
@@ -36,7 +34,7 @@ impl Command for SmtpHello {
     async fn handle(&self, socket: &mut TcpStream) -> Result<(), Report> {
         info!("handling helo");
 
-        socket.write_all(format!("250-mail.bonus.p4 greets {}", self.host).as_bytes()).await?;
+        socket.write_all(format!("250-mail.bonus.p4 greets {}\r\n", self.host).as_bytes()).await?;
 
         Ok(())
     }

@@ -1,5 +1,5 @@
 use color_eyre::Report;
-use smtp::commands::{SmtpHello, Command};
+use smtp::commands::{SmtpHello, SmtpMailFrom, Command};
 use tokio::{net::{TcpListener, TcpStream}, io::AsyncWriteExt};
 use log::{info, error, warn};
 use tokio::io::AsyncReadExt;
@@ -80,6 +80,10 @@ async fn handle_connection(socket: &mut TcpStream) -> Result<(), Report> {
                     match part {
                         "HELO" => {
                             let msg: SmtpHello = *(Command::from_str(cmd)?);
+                            msg.handle(socket).await?;
+                        },
+                        "MAIL" => {
+                            let msg: SmtpMailFrom = *(Command::from_str(cmd)?);
                             msg.handle(socket).await?;
                         },
                         _ => {

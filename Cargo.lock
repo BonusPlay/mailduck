@@ -216,7 +216,9 @@ dependencies = [
  "async-trait",
  "color-eyre",
  "env_logger",
+ "lazy_static",
  "log",
+ "regex",
  "tokio",
 ]
 
